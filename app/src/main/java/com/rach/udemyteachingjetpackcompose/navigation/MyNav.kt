@@ -16,7 +16,7 @@ fun MyNav() {
     ) {
         composable(Screens.FirstScreen.route) {
             FirstScreens(
-                onFirstClick = {
+                onClick = {
                     navController.navigate(Screens.SecondScreen.route)
                 }
             )
