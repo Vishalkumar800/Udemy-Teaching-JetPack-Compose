@@ -16,17 +16,14 @@ fun MyNav() {
     ) {
         composable(Screens.FirstScreen.route) {
             FirstScreens(
-                onClick = {
-                    navController.navigate(Screens.SecondScreen.route)
-                }
+                navController = navController
             )
         }
 
-        composable(Screens.SecondScreen.route) {
+        composable(Screens.SecondScreen.route) {backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
             SecondScreens(
-                onClick = {
-                    navController.navigate(Screens.ThirdScreen.route)
-                }
+                name = name
             )
         }
 
