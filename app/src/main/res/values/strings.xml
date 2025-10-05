@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Udemy Teaching JetPack compose</string>
+    <string name="titleText">Enter your email and password to securely access your account and manage your services</string>
 </resources>
