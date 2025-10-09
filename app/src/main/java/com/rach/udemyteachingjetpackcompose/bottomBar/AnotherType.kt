@@ -1,7 +1,10 @@
 package com.rach.udemyteachingjetpackcompose.bottomBar
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,11 +27,14 @@ import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -107,11 +113,13 @@ fun AdvanceBottomBarNew(
 ) {
 
     Box(
-        modifier = Modifier.fillMaxWidth()
-            .height(barHeight+ fabSize /2)
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(barHeight + fabSize / 2)
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(barHeight)
                 .align(Alignment.BottomCenter),
             colors = CardDefaults.cardColors(
@@ -133,9 +141,9 @@ fun AdvanceBottomBarNew(
                     SingleBottomNavItem(
                         bottomNav = item,
                         selected = currentRoute == item.route
-                    ){
-                        navController.navigate(item.route){
-                            popUpTo(navController.graph.startDestinationId){
+                    ) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
                             launchSingleTop = true
@@ -148,7 +156,8 @@ fun AdvanceBottomBarNew(
 
         LargeFloatingActionButton(
             onClick = {},
-            modifier = Modifier.size(fabSize)
+            modifier = Modifier
+                .size(fabSize)
                 .align(Alignment.Center)
                 .border(
                     width = 2.dp,
@@ -177,10 +186,25 @@ fun SingleBottomNavItem(
     onClick: () -> Unit
 ) {
 
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.92f else 1f
+    )
+
     Column(
         modifier = modifier
-            .padding(8.dp)
-            .clickable(onClick = onClick),
+            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .clickable(
+                interactionSource = interactionSource,
+                onClick = onClick,
+                indication = ripple(
+                    bounded = true,
+                    color = Color.Red.copy(alpha = 0.3f),
+                    radius = 40.dp
+                )
+            )
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
